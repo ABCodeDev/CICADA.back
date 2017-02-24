@@ -1,0 +1,1 @@
+@"c:\users\aufahr~1\docume~1\abcode\dev\cicada~1.bac\venv\scripts\python.exe" "c:\users\aufahr~1\docume~1\abcode\dev\cicada~1.bac\venv\Scripts\markdown_py" %*
