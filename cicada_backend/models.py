@@ -21,6 +21,8 @@ class Profile(models.Model):
     birth_date = models.DateField()
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
+    notifications = models.ManyToManyField('Notification', through='UserNotificationFeed')
+    responses = models.ManyToManyField('Response', through='UserComponentNotificationResponse')
 
 #Notifications and Component
 class Component(models.Model):
@@ -39,7 +41,7 @@ class Notification(models.Model):
     components = models.ManyToManyField(Component)
     access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
 
-class Text_Field(models.Model):
+class TextField(models.Model):
     component = models.OneToOneField(Component,on_delete=models.CASCADE)
     content = models.TextField()
 
@@ -66,7 +68,7 @@ class Question(models.Model):
     description = models.CharField(max_length=300)
     is_multivalue_question = models.BooleanField(default=False)
 
-class Possible_answer(models.Model):
+class PossibleAnswer(models.Model):
     question = models.ForeignKey(Question)
     possible_answer = models.CharField(max_length=200)
 
@@ -77,19 +79,25 @@ class Response(models.Model): pass
 class UserNotificationFeed(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-    response = models.ForeignKey(Response, on_delete=models.CASCADE)
 
-class Payment_response(models.Model):
+
+class PaymentResponse(models.Model):
     is_fulfilled = models.BooleanField(default=False)
     date_fulfilled = models.DateTimeField(auto_now=False,auto_now_add=False)
     response = models.ForeignKey(Response, on_delete=models.CASCADE)
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
 
-class Form_Response(models.Model):
+class FormResponse(models.Model):
     response = models.ForeignKey(Response)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
 class Answer(models.Model):
-    form_response = models.ForeignKey(Form_Response,on_delete=models.CASCADE)
+    form_response = models.ForeignKey(FormResponse,on_delete=models.CASCADE)
     answer = models.ForeignKey(Question)
+
+class UserComponentNotificationResponse(models.Model):
+    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    response = models.ForeignKey(Response, on_delete=models.CASCADE)
