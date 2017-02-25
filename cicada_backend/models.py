@@ -1,6 +1,24 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
+
+#User Profile Related
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, blank=True)
+    ktp_no = models.CharField(max_length=17)
+    npwp_no = models.CharField(max_length=15, blank=True)
+    phone_no = models.IntegerField(max_length=11)
+    birth_date = models.DateField()
+    id_organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    id_access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
+
+class Organization(models.Model):
+    name = models.CharField(max_length=20)
+    address = models.CharField (max_length=35)
+
+class AdministratorAccess(models.Model): pass
 
 #Notifications and Component
 class Notification(models.Model):
