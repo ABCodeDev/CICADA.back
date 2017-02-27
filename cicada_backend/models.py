@@ -80,7 +80,6 @@ class UserNotificationFeed(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
 
-
 class PaymentResponse(models.Model):
     is_fulfilled = models.BooleanField(default=False)
     date_fulfilled = models.DateTimeField(auto_now=False,auto_now_add=False)
