@@ -26,91 +26,91 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class Organization(serializers.ModelSerializer):
+class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Organization
         fields = '__all__'
 
 
-class AdministratorAccess(serializers.ModelSerializer):
+class AdministratorAccessSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AdministratorAccess
         fields = '__all__'
 
 
-class Component(serializers.ModelSerializer):
+class ComponentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Component
         fields = '__all__'
 
 
-class Notification(serializers.ModelSerializer):
+class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notification
         fields = '__all__'
 
 
-class TextField(serializers.ModelSerializer):
+class TextFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TextField
         fields = '__all__'
 
 
-class Timer(serializers.ModelSerializer):
+class TimerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Timer
         fields = '__all__'
 
 
-class Bill(serializers.ModelSerializer):
+class BillSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Bill
         fields = '__all__'
 
 
-class Form(serializers.ModelSerializer):
+class FormSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Form
         fields = '__all__'
 
 
-class Question(serializers.ModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
         fields = '__all__'
 
 
-class PossibleAnswer(serializers.ModelSerializer):
+class PossibleAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PossibleAnswer
         fields = '__all__'
 
 
-class UserNotificationFeed(serializers.ModelSerializer):
+class UserNotificationFeedSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserNotificationFeed
         fields = '__all__'
 
 
-class PaymentResponse(serializers.ModelSerializer):
+class PaymentResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PaymentResponse
         fields = '__all__'
 
 
-class FormResponse(serializers.ModelSerializer):
+class FormResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FormResponse
         fields = '__all__'
 
 
-class Answer(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Answer
         fields = '__all__'
 
 
-class UserComponentNotificationResponse(serializers.ModelSerializer):
+class UserComponentNotificationResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserComponentNotificationResponse
         fields = '__all__'
