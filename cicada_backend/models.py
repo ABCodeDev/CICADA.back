@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 class Organization(models.Model):
     name = models.CharField(max_length=20)
-    address = models.CharField (max_length=35)
+    address = models.CharField (max_length=35,null=True,blank=True)
 
 class AdministratorAccess(models.Model):
     id = models.AutoField(primary_key=True)
