@@ -53,4 +53,6 @@ fabric.properties
 # .idea/misc.xml
 # *.ipr
 
+.idea/vcs.xml
+
 # End of https://www.gitignore.io/api/pycharm
