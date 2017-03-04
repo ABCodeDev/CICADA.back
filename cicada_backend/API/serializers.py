@@ -86,6 +86,15 @@ class PossibleAnswerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ResponseSerializer(serializers.ModelSerializer):
+
+    response_content = None
+    
+
+    class Meta:
+        model = models.Response
+        fields = '__all__'
+
 class UserNotificationFeedSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserNotificationFeed

@@ -74,7 +74,12 @@ class PossibleAnswer(models.Model):
 
 #User Response
 
-class Response(models.Model): pass
+class Response(models.Model):
+    RESPONSE_TYPE = (
+        ('P','Payment'),
+        ('F','Form')
+    )
+    type = models.CharField(max_length=1,choices=RESPONSE_TYPE)
 
 class UserNotificationFeed(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
