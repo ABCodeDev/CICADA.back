@@ -55,4 +55,6 @@ fabric.properties
 
 .idea/vcs.xml
 
+db.sqlite3
+
 # End of https://www.gitignore.io/api/pycharm
