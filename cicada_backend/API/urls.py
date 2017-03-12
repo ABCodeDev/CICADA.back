@@ -25,7 +25,4 @@ urlpatterns = [
     url(r'^mobile/notification/(?P<pk>[0-9]+)/$',UserNotificationDetail.as_view()),
 
     url(r'^mobile/response/$',UserResponseManager.as_view()),
-    url(r'^mobile/response/(?P<pk>[0-9]+)/$', UserResponseManager.as_view()),
-
-    url(r'^test/',testApi.as_view()),
 ]

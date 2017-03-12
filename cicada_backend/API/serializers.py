@@ -81,13 +81,12 @@ class PossibleAnswerSerializer(serializers.ModelSerializer):
 
 
 class ResponseSerializer(serializers.ModelSerializer):
-
     response_content = None
-    
 
     class Meta:
         model = models.Response
         fields = '__all__'
+
 
 class UserNotificationFeedSerializer(serializers.ModelSerializer):
     class Meta:
@@ -113,17 +112,14 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UserComponentNotificationResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        id = serializers.IntegerField()
+
+
 class NotificationSerializer(serializers.ModelSerializer):
     components = ComponentSerializer(many=True)
 
     class Meta:
         model = models.Notification
         fields = ('id', 'title', 'components', 'created', 'updated')
-
-
-class UserComponentNotificationResponseSerializer(serializers.ModelSerializer):
-    notification = NotificationSerializer()
-    class Meta:
-        model = models.UserComponentNotificationResponse
-
-

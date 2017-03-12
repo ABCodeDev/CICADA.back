@@ -132,41 +132,15 @@ class UserNotificationDetail(APIView):
 
 
 class UserResponseManager(APIView):
-    def post(self, request, pk):
+    def post(self, request):
         current_user = request.user
         json_data = json.loads(request.body)
-        ucnr = UserComponentNotificationResponse.objects.get(profile=current_user.id, component=pk,
-                                                             notification=json_data['id_notification'])
+        ucnr = UserComponentNotificationResponse.objects.get(profile=current_user.id, component__id=json_data['component_id'],
+                                                             notification=json_data['notification_id'])
         print(json_data['value'])
         response = SimpleResponse(value=json_data['value'])
         response.save()
         ucnr.response = response
         ucnr.save()
-        return Response("valid")
+        return Response(response.id)
 
-
-class testApi(APIView):
-    def post(self, request):
-        current_user = request.user
-        profile = Profile.objects.get(user_id=current_user.id)
-        access = AdministratorAccess.objects.get(id=current_user.id)
-        json_data = json.loads(request.body)
-        notification = Notification(title=json_data['title'])
-        notification.access = access
-        notification.save()
-        unf = UserNotificationFeed()
-        unf.user = profile
-        unf.notification = notification
-        unf.save()
-        for component_id in json_data['components']:
-            ucnr = UserComponentNotificationResponse(component_id=component_id)
-            ucnr.profile = profile
-            ucnr.notification = notification
-            ucnr.save()
-        return Response("Valid")
-
-    def get(self, request):
-        current_user = request.user
-        queryset = Component.objects.filter(profile_id=current_user.id, singleuse=False)
-        serializer = ComponentSerializer(queryset, many=True)
-        return Response(serializer.data)
