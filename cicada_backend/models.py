@@ -23,8 +23,8 @@ class Profile(models.Model):
     npwp_no = models.CharField(max_length=15, blank=True)
     phone_no = models.CharField(max_length=11)
     birth_date = models.DateField()
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE, null=True)
     notifications = models.ManyToManyField('Notification', through='UserNotificationFeed')
 
 #Notifications and Component

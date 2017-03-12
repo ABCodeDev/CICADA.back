@@ -34,22 +34,34 @@ class OrganizationList(OrganizationMixin, generics.ListCreateAPIView): pass
 class OrganizationDetail(OrganizationMixin, generics.RetrieveDestroyAPIView): pass
 
 
-class UserProfileManager(generics.ListCreateAPIView):
+class UserProfileManager(APIView):
     def post(self, request):
         current_user = request.user
         data = json.loads(request.body)
-        queryset = Profile.objects.get(user_id=current_user.id)
-        queryset.bio = data['bio']
-        queryset.ktp_no = data['ktp_no']
-        queryset.npwp_no = data['npwp_no']
-        queryset.phone_no = data['phone_no']
-        queryset.birth_date = data['birth_date']
-        queryset.save()
-        return Response("Valid")
+        user = User.objects.get(id=current_user.id)
+        profile = Profile(user=user)
+        profile.bio = data['bio']
+        profile.ktp_no = data['ktp_no']
+        profile.npwp_no = data['npwp_no']
+        profile.phone_no = data['phone_no']
+        profile.birth_date = data['birth_date']
+        profile.save()
+
+
+    def patch(self, request):
+        current_user = request.user
+        data = json.loads(request.body)
+        profile = Profile.objects.get(user_id=current_user.id)
+        profile.bio = data['bio']
+        profile.ktp_no = data['ktp_no']
+        profile.npwp_no = data['npwp_no']
+        profile.phone_no = data['phone_no']
+        profile.birth_date = data['birth_date']
+        profile.save()
+        return Response(profile.id)
 
     def get(self, request):
         current_user = request.user
-        data = json.loads(request.body)
         queryset = Profile.objects.get(user_id=current_user.id)
         serializer = UserProfileSerializer(queryset)
         return Response(serializer.data)
@@ -135,7 +147,8 @@ class UserResponseManager(APIView):
     def post(self, request):
         current_user = request.user
         json_data = json.loads(request.body)
-        ucnr = UserComponentNotificationResponse.objects.get(profile=current_user.id, component__id=json_data['component_id'],
+        ucnr = UserComponentNotificationResponse.objects.get(profile=current_user.id,
+                                                             component__id=json_data['component_id'],
                                                              notification=json_data['notification_id'])
         print(json_data['value'])
         response = SimpleResponse(value=json_data['value'])
@@ -143,4 +156,3 @@ class UserResponseManager(APIView):
         ucnr.response = response
         ucnr.save()
         return Response(response.id)
-
