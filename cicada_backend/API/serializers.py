@@ -44,12 +44,6 @@ class ComponentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Notification
-        fields = '__all__'
-
-
 class TextFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TextField
@@ -119,7 +113,17 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class NotificationSerializer(serializers.ModelSerializer):
+    component = ComponentSerializer(many=True)
+
+    class Meta:
+        model = models.Notification
+        fields = ('id', 'title', 'component', 'created', 'updated')
+
+
 class UserComponentNotificationResponseSerializer(serializers.ModelSerializer):
+    notification = NotificationSerializer()
     class Meta:
         model = models.UserComponentNotificationResponse
-        fields = '__all__'
+
+

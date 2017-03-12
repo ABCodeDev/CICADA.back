@@ -26,7 +26,7 @@ class Profile(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
     notifications = models.ManyToManyField('Notification', through='UserNotificationFeed')
-    responses = models.ManyToManyField('Response', through='UserComponentNotificationResponse')
+    #responses = models.ManyToManyField('Response', through='UserComponentNotificationResponse')
 
 #Notifications and Component
 class Component(models.Model):
@@ -34,6 +34,7 @@ class Component(models.Model):
     title = models.CharField(max_length=100)
     singleuse = models.BooleanField(default=False)
     description = models.CharField(max_length=200)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -42,8 +43,8 @@ class Notification(models.Model):
     title = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
-    components = models.ManyToManyField(Component)
     access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
+    component = models.ManyToManyField(Component, through='UserComponentNotificationResponse')
 
 class TextField(models.Model):
     component = models.OneToOneField(Component,on_delete=models.CASCADE)
@@ -59,7 +60,7 @@ class Bill(models.Model):
 
 class Form(models.Model):
     component = models.OneToOneField(Component, on_delete=models.CASCADE)
-    due_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    value = models.TextField()
 
 class Question(models.Model):
     QUESTION_TYPES = (
@@ -78,12 +79,12 @@ class PossibleAnswer(models.Model):
 
 #User Response
 
-class Response(models.Model):
-    RESPONSE_TYPE = (
-        ('P','Payment'),
-        ('F','Form')
-    )
-    type = models.CharField(max_length=1,choices=RESPONSE_TYPE)
+class Response(models.Model): pass
+
+class SimpleResponse(models.Model):
+    value = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
 class UserNotificationFeed(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -106,9 +107,9 @@ class Answer(models.Model):
 
 class UserComponentNotificationResponse(models.Model):
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-    component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE, null=True)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    response = models.ForeignKey(Response, on_delete=models.CASCADE)
+    response = models.ForeignKey(SimpleResponse, on_delete=models.CASCADE, null=True)
 
 # This code is triggered whenever a new user has been created and saved to the database
 
