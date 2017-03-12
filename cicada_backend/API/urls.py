@@ -10,6 +10,9 @@ urlpatterns = [
     url(r'^notification/$',NotificationManager.as_view()),
     url(r'^notification/(?P<pk>[0-9]+)/$',NotificationDetail.as_view()),
 
+    url(r'^component/$',ComponentManager.as_view()),
+    url(r'^component/(?P<pk>[0-9]+)/$',ComponentDetail.as_view()),
+
     url(r'^organization/$', OrganizationList.as_view()),
     url(r'^organization/(?P<pk>[0-9]+)/$', OrganizationDetail.as_view()),
 

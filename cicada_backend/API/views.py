@@ -63,13 +63,12 @@ class UserProfileManager(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-class NotificationMixin(APIView):
-    queryset = Notification.objects.all()
-    serializer_class = NotificationSerializer
-    permissions_classes = (AllowAny,)
+class NotificationManager(APIView):
+    def get(self, request):
+        queryset = Notification.objects.all()
+        serializer = NotificationSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-
-class NotificationManager(NotificationMixin, generics.ListCreateAPIView, APIView):
     def post(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
@@ -112,11 +111,15 @@ class ComponentManager(APIView):
         return Response("Valid")
 
     def get(self, request):
-        current_user = request.user
-        queryset = Component.objects.filter(profile_id=current_user.id, singleuse=False)
+        queryset = Component.objects.all()
         serializer = ComponentSerializer(queryset, many=True)
         return Response(serializer.data)
 
+class ComponentDetail(APIView):
+    def get(self, request, pk):
+        component = Component.objects.get(id=pk)
+        serializer = ComponentSerializer(component)
+        return Response(serializer.data)
 
 class UserResponseManager(APIView):
     def post(self, request, pk):
