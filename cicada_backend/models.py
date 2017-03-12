@@ -26,7 +26,6 @@ class Profile(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
     notifications = models.ManyToManyField('Notification', through='UserNotificationFeed')
-    #responses = models.ManyToManyField('Response', through='UserComponentNotificationResponse')
 
 #Notifications and Component
 class Component(models.Model):
@@ -44,7 +43,7 @@ class Notification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
-    component = models.ManyToManyField(Component, through='UserComponentNotificationResponse')
+    components = models.ManyToManyField(Component, through='UserComponentNotificationResponse')
 
 class TextField(models.Model):
     component = models.OneToOneField(Component,on_delete=models.CASCADE)

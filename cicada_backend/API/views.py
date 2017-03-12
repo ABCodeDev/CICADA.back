@@ -34,14 +34,6 @@ class OrganizationList(OrganizationMixin, generics.ListCreateAPIView): pass
 class OrganizationDetail(OrganizationMixin, generics.RetrieveDestroyAPIView): pass
 
 
-class UserNotification(generics.ListAPIView):
-    def get(self, request):
-        current_user = request.user
-        queryset = Notification.objects.filter(profile__user_id=current_user.id)
-        serializer = NotificationSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
 class UserProfileManager(generics.ListCreateAPIView):
     def post(self, request):
         current_user = request.user
@@ -115,11 +107,29 @@ class ComponentManager(APIView):
         serializer = ComponentSerializer(queryset, many=True)
         return Response(serializer.data)
 
+
 class ComponentDetail(APIView):
     def get(self, request, pk):
         component = Component.objects.get(id=pk)
         serializer = ComponentSerializer(component)
         return Response(serializer.data)
+
+
+class UserNotificationManager(APIView):
+    def get(self, request):
+        current_user = request.user
+        notifications = Notification.objects.filter(profile__user_id=current_user.id)
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response(serializer.data)
+
+
+class UserNotificationDetail(APIView):
+    def get(self, request, pk):
+        current_user = request.user
+        notifications = Notification.objects.filter(profile__user_id=current_user.id, id=pk)
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response(serializer.data)
+
 
 class UserResponseManager(APIView):
     def post(self, request, pk):

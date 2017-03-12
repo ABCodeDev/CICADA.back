@@ -21,7 +21,8 @@ urlpatterns = [
 
     url(r'^mobile/user/$',UserProfileManager.as_view()),
 
-    url(r'^mobile/component/', ComponentManager.as_view()),
+    url(r'^mobile/notification/$',UserNotificationManager.as_view()),
+    url(r'^mobile/notification/(?P<pk>[0-9]+)/$',UserNotificationDetail.as_view()),
 
     url(r'^mobile/response/$',UserResponseManager.as_view()),
     url(r'^mobile/response/(?P<pk>[0-9]+)/$', UserResponseManager.as_view()),
