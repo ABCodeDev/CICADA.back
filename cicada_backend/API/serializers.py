@@ -116,8 +116,12 @@ class UserComponentNotificationResponseSerializer(serializers.ModelSerializer):
     class Meta:
         id = serializers.IntegerField()
 
-
 class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Notification
+        fields = ('id', 'title', 'components', 'created', 'updated')
+
+class NotificationComponentSerializer(serializers.ModelSerializer):
     components = ComponentSerializer(many=True)
 
     class Meta:

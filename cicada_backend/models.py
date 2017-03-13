@@ -31,8 +31,9 @@ class Profile(models.Model):
 class Component(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
-    singleuse = models.BooleanField(default=False)
+    single_use = models.BooleanField(default=False)
     description = models.CharField(max_length=200)
+    type = models.CharField(max_length=10)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
