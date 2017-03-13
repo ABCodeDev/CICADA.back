@@ -96,9 +96,18 @@ class NotificationManager(APIView):
 class NotificationDetail(APIView):
     def get(self, request, pk):
         notification = Notification.objects.get(id=pk)
-        serializer = NotificationComponentSerializer(notification)
-        return Response(serializer.data)
-
+        notification_dict = NotificationSerializer(notification).data
+        notification_dict['components_id'] = notification_dict.pop('components')
+        notification_dict['component'] = []
+        for component_id in notification_dict['components_id']:
+            component = Component.objects.get(id=component_id)
+            component_dict = ComponentSerializer(component).data
+            if component.type == 'form':
+                form = Form.objects.get(component=component)
+                form_serializer = FormSerializer(form)
+                component_dict['data'] = form_serializer.data
+            notification_dict['component'].append(component_dict)
+        return Response(notification_dict)
 
 class ComponentManager(APIView):
     def post(self, request):
