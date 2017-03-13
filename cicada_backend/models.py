@@ -41,6 +41,7 @@ class Component(models.Model):
 class Notification(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     access = models.ForeignKey(AdministratorAccess, on_delete=models.CASCADE)
