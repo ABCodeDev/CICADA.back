@@ -125,44 +125,42 @@ class ComponentManager(APIView):
     def post(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if type(profile.access_id) != type(None):
-            current_user = request.user
-            profile = Profile.objects.get(user_id=current_user.id)
-            json_data = json.loads(request.body)
-            component = Component(title=json_data['title'], single_use=json_data['single_use'],
-                                  description=json_data['description'], type=json_data['type'])
-            component.profile = profile
-            component.save()
-            form = Form(value=json_data['form'])
-            form.component = component
-            form.save()
-            return Response("Valid")
-        return Response("ACCESS DENIED")
+        #if type(profile.access_id) != type(None):
+        json_data = json.loads(request.body)
+        component = Component(title=json_data['title'], single_use=json_data['single_use'],
+                              description=json_data['description'], type=json_data['type'])
+        component.profile = profile
+        component.save()
+        form = Form(value=json_data['form'])
+        form.component = component
+        form.save()
+        return Response("Valid")
+        #return Response("ACCESS DENIED")
 
     def get(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if type(profile.access_id) != type(None):
-            queryset = Component.objects.all().order_by('created')
-            serializer = ComponentSerializer(queryset, many=True)
-            return Response(serializer.data)
-        return Response("ACCESS DENIED")
+        #if type(profile.access_id) != type(None):
+        queryset = Component.objects.all().order_by('created')
+        serializer = ComponentSerializer(queryset, many=True)
+        return Response(serializer.data)
+        #Response("ACCESS DENIED")
 
 
 class ComponentDetail(APIView):
     def get(self, request, pk):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if type(profile.access_id) != type(None):
-            component = Component.objects.get(id=pk)
-            serializer = ComponentSerializer(component)
-            serializer_dict = serializer.data
-            if component.type == 'form':
-                form = Form.objects.get(component=component)
-                form_serializer = FormSerializer(form)
-                serializer_dict['data'] = form_serializer.data
-            return Response(serializer_dict)
-        return Response("ACCESS DENIED")
+        #if type(profile.access_id) != type(None):
+        component = Component.objects.get(id=pk)
+        serializer = ComponentSerializer(component)
+        serializer_dict = serializer.data
+        if component.type == 'form':
+            form = Form.objects.get(component=component)
+            form_serializer = FormSerializer(form)
+            serializer_dict['data'] = form_serializer.data
+        return Response(serializer_dict)
+        #return Response("ACCESS DENIED")
 
 
 class UserNotificationManager(APIView):
