@@ -11,7 +11,7 @@ import json
 
 
 class UserMixin:
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by('created')
     serializer_class = UserProfileSerializer
     permission_classes = (AllowAny,)
 
@@ -23,7 +23,7 @@ class UserDetail(UserMixin, generics.RetrieveUpdateDestroyAPIView): pass
 
 
 class OrganizationMixin:
-    queryset = Organization.objects.all()
+    queryset = Organization.objects.all().order_by('created')
     serializer_class = OrganizationSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -74,7 +74,7 @@ class NotificationManager(APIView):
         profile = Profile.objects.get(user_id=current_user.id)
         print(profile.access_id)
         if type(profile.access_id) != type(None):
-            queryset = Notification.objects.all()
+            queryset = Notification.objects.all().order_by('created')
             serializer = NotificationComponentSerializer(queryset, many=True)
             return Response(serializer.data)
         return Response("ACCESS DENIED")
@@ -143,7 +143,7 @@ class ComponentManager(APIView):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
         if type(profile.access_id) != type(None):
-            queryset = Component.objects.all()
+            queryset = Component.objects.all().order_by('created')
             serializer = ComponentSerializer(queryset, many=True)
             return Response(serializer.data)
         return Response("ACCESS DENIED")
@@ -168,7 +168,7 @@ class ComponentDetail(APIView):
 class UserNotificationManager(APIView):
     def get(self, request):
         current_user = request.user
-        notifications = Notification.objects.filter(profile__user_id=current_user.id)
+        notifications = Notification.objects.filter(profile__user_id=current_user.id).order_by('created')
         serializer = NotificationComponentSerializer(notifications, many=True)
         return Response(serializer.data)
 
