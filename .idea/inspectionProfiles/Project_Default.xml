@@ -16,6 +16,7 @@
         <list>
           <option value="json" />
           <option value="cicada_backend.API.views.print" />
+          <option value="cicada_backend.API.views.type" />
         </list>
       </option>
     </inspection_tool>

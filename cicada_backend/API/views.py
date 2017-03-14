@@ -73,7 +73,7 @@ class NotificationManager(APIView):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
         print(profile.access_id)
-        if profile.access_id >= 1:
+        if type(profile.access_id) != type(None):
             queryset = Notification.objects.all()
             serializer = NotificationComponentSerializer(queryset, many=True)
             return Response(serializer.data)
@@ -82,7 +82,7 @@ class NotificationManager(APIView):
     def post(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if profile.access_id >= 1:
+        if type(profile.access_id) != type(None):
             access = AdministratorAccess.objects.get(id=current_user.id)
             json_data = json.loads(request.body)
             notification = Notification(title=json_data['title'])
@@ -105,7 +105,7 @@ class NotificationDetail(APIView):
     def get(self, request, pk):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if profile.access_id >= 1:
+        if type(profile.access_id) != type(None):
             notification = Notification.objects.get(id=pk)
             notification_dict = NotificationSerializer(notification).data
             notification_dict['components_id'] = notification_dict.pop('components')
@@ -125,7 +125,7 @@ class ComponentManager(APIView):
     def post(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if profile.access_id >= 1:
+        if type(profile.access_id) != type(None):
             current_user = request.user
             profile = Profile.objects.get(user_id=current_user.id)
             json_data = json.loads(request.body)
@@ -142,7 +142,7 @@ class ComponentManager(APIView):
     def get(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if profile.access_id >= 1:
+        if type(profile.access_id) != type(None):
             queryset = Component.objects.all()
             serializer = ComponentSerializer(queryset, many=True)
             return Response(serializer.data)
@@ -153,7 +153,7 @@ class ComponentDetail(APIView):
     def get(self, request, pk):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        if profile.access_id >= 1:
+        if type(profile.access_id) != type(None):
             component = Component.objects.get(id=pk)
             serializer = ComponentSerializer(component)
             serializer_dict = serializer.data
