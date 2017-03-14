@@ -46,6 +46,7 @@ class UserProfileManager(APIView):
         profile.phone_no = data['phone_no']
         profile.birth_date = data['birth_date']
         profile.save()
+        return Response(profile.id)
 
 
     def patch(self, request):
@@ -69,85 +70,99 @@ class UserProfileManager(APIView):
 
 class NotificationManager(APIView):
     def get(self, request):
-        queryset = Notification.objects.all()
-        serializer = NotificationComponentSerializer(queryset, many=True)
-        return Response(serializer.data)
+        current_user = request.user
+        profile = Profile.objects.get(user_id=current_user.id)
+        print(profile.access_id)
+        if profile.access_id >= 1:
+            queryset = Notification.objects.all()
+            serializer = NotificationComponentSerializer(queryset, many=True)
+            return Response(serializer.data)
+        return Response("ACCESS DENIED")
 
     def post(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        access = AdministratorAccess.objects.get(id=current_user.id)
-        json_data = json.loads(request.body)
-        notification = Notification(title=json_data['title'])
-        notification.access = access
-        notification.save()
-        unf = UserNotificationFeed()
-        unf.user = profile
-        unf.notification = notification
-        unf.save()
-        for component_id in json_data['components']:
-            ucnr = UserComponentNotificationResponse(component_id=component_id)
-            ucnr.profile = profile
-            ucnr.notification = notification
-            ucnr.save()
-        return Response("Valid")
+        if profile.access_id >= 1:
+            access = AdministratorAccess.objects.get(id=current_user.id)
+            json_data = json.loads(request.body)
+            notification = Notification(title=json_data['title'])
+            notification.access = access
+            notification.save()
+            unf = UserNotificationFeed()
+            unf.user = profile
+            unf.notification = notification
+            unf.save()
+            for component_id in json_data['components']:
+                ucnr = UserComponentNotificationResponse(component_id=component_id)
+                ucnr.profile = profile
+                ucnr.notification = notification
+                ucnr.save()
+            return Response(notification.id)
+        return Response("ACCESS DENIED")
 
 
 class NotificationDetail(APIView):
     def get(self, request, pk):
-        notification = Notification.objects.get(id=pk)
-        notification_dict = NotificationSerializer(notification).data
-        notification_dict['components_id'] = notification_dict.pop('components')
-        notification_dict['component'] = []
-        for component_id in notification_dict['components_id']:
-            component = Component.objects.get(id=component_id)
-            component_dict = ComponentSerializer(component).data
-            if component.type == 'form':
-                form = Form.objects.get(component=component)
-                form_serializer = FormSerializer(form)
-                component_dict['data'] = form_serializer.data
-            notification_dict['component'].append(component_dict)
-        return Response(notification_dict)
+        current_user = request.user
+        profile = Profile.objects.get(user_id=current_user.id)
+        if profile.access_id >= 1:
+            notification = Notification.objects.get(id=pk)
+            notification_dict = NotificationSerializer(notification).data
+            notification_dict['components_id'] = notification_dict.pop('components')
+            notification_dict['component'] = []
+            for component_id in notification_dict['components_id']:
+                component = Component.objects.get(id=component_id)
+                component_dict = ComponentSerializer(component).data
+                if component.type == 'form':
+                    form = Form.objects.get(component=component)
+                    form_serializer = FormSerializer(form)
+                    component_dict['data'] = form_serializer.data
+                notification_dict['component'].append(component_dict)
+            return Response(notification_dict)
+        return Response("ACCESS DENIED")
 
 class ComponentManager(APIView):
     def post(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        json_data = json.loads(request.body)
-        component = Component(title=json_data['title'], single_use=json_data['single_use'],
-                              description=json_data['description'], type=json_data['type'])
-        component.profile = profile
-        component.save()
-        form = Form(value=json_data['form'])
-        form.component = component
-        form.save()
-        return Response("Valid")
+        if profile.access_id >= 1:
+            current_user = request.user
+            profile = Profile.objects.get(user_id=current_user.id)
+            json_data = json.loads(request.body)
+            component = Component(title=json_data['title'], single_use=json_data['single_use'],
+                                  description=json_data['description'], type=json_data['type'])
+            component.profile = profile
+            component.save()
+            form = Form(value=json_data['form'])
+            form.component = component
+            form.save()
+            return Response("Valid")
+        return Response("ACCESS DENIED")
 
     def get(self, request):
-        queryset = Component.objects.all()
-        serializer = ComponentSerializer(queryset, many=True)
-        # serializer_data = []
-        # for e in queryset:
-        #     e_serializer = ComponentSerializer(e)
-        #     dict = e_serializer.data
-        #     if e.type == 'form':
-        #         form = Form.objects.get(component=e)
-        #         form_serializer = FormSerializer(form)
-        #         dict['data'] = form_serializer.data
-        #     serializer_data.append(dict)
-        return Response(serializer.data)
+        current_user = request.user
+        profile = Profile.objects.get(user_id=current_user.id)
+        if profile.access_id >= 1:
+            queryset = Component.objects.all()
+            serializer = ComponentSerializer(queryset, many=True)
+            return Response(serializer.data)
+        return Response("ACCESS DENIED")
 
 
 class ComponentDetail(APIView):
     def get(self, request, pk):
-        component = Component.objects.get(id=pk)
-        serializer = ComponentSerializer(component)
-        serializer_dict = serializer.data
-        if component.type == 'form':
-            form = Form.objects.get(component=component)
-            form_serializer = FormSerializer(form)
-            serializer_dict['data'] = form_serializer.data
-        return Response(serializer_dict)
+        current_user = request.user
+        profile = Profile.objects.get(user_id=current_user.id)
+        if profile.access_id >= 1:
+            component = Component.objects.get(id=pk)
+            serializer = ComponentSerializer(component)
+            serializer_dict = serializer.data
+            if component.type == 'form':
+                form = Form.objects.get(component=component)
+                form_serializer = FormSerializer(form)
+                serializer_dict['data'] = form_serializer.data
+            return Response(serializer_dict)
+        return Response("ACCESS DENIED")
 
 
 class UserNotificationManager(APIView):
