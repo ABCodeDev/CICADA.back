@@ -119,11 +119,11 @@ class UserComponentNotificationResponseSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notification
-        fields = ('id', 'title', 'components', 'created', 'updated')
+        fields = ('id', 'title', 'description', 'components', 'created', 'updated')
 
 class NotificationComponentSerializer(serializers.ModelSerializer):
     components = ComponentSerializer(many=True)
 
     class Meta:
         model = models.Notification
-        fields = ('id', 'title', 'components', 'created', 'updated')
+        fields = ('id', 'title', 'description', 'components', 'created', 'updated')
