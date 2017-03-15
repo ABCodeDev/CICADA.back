@@ -254,11 +254,14 @@ class GlobalDataManager(APIView):
 
 
 class GlobalResponseManager(APIView):
-    def post(self, response):
+    def post(self, request):
+        json_data = json.loads(request.body)
         global_data = GlobalData.objects.get(id=1)
         profile = Profile.objects.get(user_id=global_data.user_id)
-        ucnr = UserComponentNotificationResponse(component_id=global_data.component_id,
+        ucnr = UserComponentNotificationResponse.objects.get(component_id=global_data.component_id,
                                                  notification_id=global_data.notification_id,
                                                  profile=profile)
         response = ucnr.response
-        return Response(ResponseSerializer(response).data)
+        response.value = json_data['data']
+        response.save()
+        return Response(response.id)
