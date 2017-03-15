@@ -61,7 +61,8 @@ class Bill(models.Model):
 
 class Form(models.Model):
     component = models.OneToOneField(Component, on_delete=models.CASCADE)
-    value = models.TextField()
+    json_schema = models.TextField()
+    ui_schema = models.TextField()
 
 class Question(models.Model):
     QUESTION_TYPES = (
