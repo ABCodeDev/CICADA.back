@@ -11,7 +11,7 @@ import json
 
 
 class UserMixin:
-    queryset = Profile.objects.all().order_by('created')
+    queryset = Profile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = (AllowAny,)
 
@@ -23,7 +23,7 @@ class UserDetail(UserMixin, generics.RetrieveUpdateDestroyAPIView): pass
 
 
 class OrganizationMixin:
-    queryset = Organization.objects.all().order_by('created')
+    queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -88,10 +88,6 @@ class NotificationManager(APIView):
             notification = Notification(title=json_data['title'])
             notification.access = access
             notification.save()
-            unf = UserNotificationFeed()
-            unf.user = profile
-            unf.notification = notification
-            unf.save()
             for component_id in json_data['components']:
                 ucnr = UserComponentNotificationResponse(component_id=component_id)
                 ucnr.profile = profile
@@ -119,6 +115,25 @@ class NotificationDetail(APIView):
                     component_dict['data'] = form_serializer.data
                 notification_dict['component'].append(component_dict)
             return Response(notification_dict)
+        return Response("ACCESS DENIED")
+
+class NotificationSend(APIView):
+    def post(self, request):
+        current_user = request.user
+        profile = Profile.objects.get(user_id=current_user.id)
+        json_data = json.loads(request.body)
+        if type(profile.access_id) != type(None):
+            notification = Notification.objects.get(id=json_data['notification_id'])
+            target_user = Profile.objects.get(user_id=json_data['user_id'])
+            unf_check = UserNotificationFeed.objects.filter(user=target_user, notification=notification)
+            if unf_check:
+                return Response("FEED ALREADY EXIST")
+            else:
+                unf = UserNotificationFeed()
+                unf.user = target_user
+                unf.notification = notification
+                unf.save()
+                return Response(unf.id)
         return Response("ACCESS DENIED")
 
 class ComponentManager(APIView):

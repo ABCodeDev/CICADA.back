@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^user-profile/(?P<pk>[0-9]+)/$', UserDetail.as_view()),
 
     url(r'^notification/$',NotificationManager.as_view()),
+    url(r'^notification/send/$',NotificationSend.as_view()),
     url(r'^notification/(?P<pk>[0-9]+)/$',NotificationDetail.as_view()),
 
     url(r'^component/$',ComponentManager.as_view()),
