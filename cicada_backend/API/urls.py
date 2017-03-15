@@ -33,4 +33,6 @@ urlpatterns = [
     url(r'^client/notification/(?P<pk>[0-9]+)/$', UserNotificationDetail.as_view()),
 
     url(r'^client/response/$', UserResponseManager.as_view()),
+
+    url(r'^global_data/$', GlobalDataManager.as_view()),
 ]

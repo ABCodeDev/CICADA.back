@@ -113,6 +113,10 @@ class UserComponentNotificationResponse(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     response = models.ForeignKey(SimpleResponse, on_delete=models.CASCADE, null=True)
 
+class GlobalData(models.Model):
+    notification_id = models.IntegerField()
+    component_id = models.IntegerField()
+
 # This code is triggered whenever a new user has been created and saved to the database
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

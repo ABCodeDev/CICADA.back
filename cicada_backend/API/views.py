@@ -217,3 +217,22 @@ class UserResponseManager(APIView):
         ucnr.response = response
         ucnr.save()
         return Response(response.id)
+
+class GlobalDataManager(APIView):
+    def post(self, request):
+        json_data = json.loads(request.body)
+        global_data = GlobalData.objects.filter(id=1)
+        if global_data:
+            print('A')
+            global_data = GlobalData.objects.get(id=1)
+            global_data.component_id = json_data['component_id']
+            global_data.notification_id = json_data['notification_id']
+            global_data.save()
+        else:
+            print('B')
+            global_data = GlobalData()
+            global_data.component_id = json_data['component_id']
+            global_data.notification_id = json_data['notification_id']
+            global_data.save()
+        return Response("SUCCESS")
+

@@ -127,3 +127,7 @@ class NotificationComponentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notification
         fields = ('id', 'title', 'description', 'components', 'created', 'updated')
+
+class GlobalDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
