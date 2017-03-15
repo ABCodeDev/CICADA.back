@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^client/response/$', UserResponseManager.as_view()),
 
     url(r'^global_data/$', GlobalDataManager.as_view()),
+    url(r'^global_response/$', GlobalResponseManager.as_view()),
 ]

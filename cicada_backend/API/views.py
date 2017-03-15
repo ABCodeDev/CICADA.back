@@ -251,3 +251,14 @@ class GlobalDataManager(APIView):
         data = {'user_id': global_data.user_id, 'notification_id': global_data.notification_id,
                 'component': serializer_dict}
         return Response(data)
+
+
+class GlobalResponseManager(APIView):
+    def post(self, response):
+        global_data = GlobalData.objects.get(id=1)
+        profile = Profile.objects.get(user_id=global_data.user_id)
+        ucnr = UserComponentNotificationResponse(component_id=global_data.component_id,
+                                                 notification_id=global_data.notification_id,
+                                                 profile=profile)
+        response = ucnr.response
+        return Response(ResponseSerializer(response).data)
