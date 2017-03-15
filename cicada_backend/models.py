@@ -116,6 +116,7 @@ class UserComponentNotificationResponse(models.Model):
 class GlobalData(models.Model):
     notification_id = models.IntegerField()
     component_id = models.IntegerField()
+    user_id = models.IntegerField()
 
 # This code is triggered whenever a new user has been created and saved to the database
 

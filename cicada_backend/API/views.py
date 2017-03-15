@@ -48,7 +48,6 @@ class UserProfileManager(APIView):
         profile.save()
         return Response(profile.id)
 
-
     def patch(self, request):
         current_user = request.user
         data = json.loads(request.body)
@@ -117,6 +116,7 @@ class NotificationDetail(APIView):
             return Response(notification_dict)
         return Response("ACCESS DENIED")
 
+
 class NotificationSend(APIView):
     def post(self, request):
         current_user = request.user
@@ -136,11 +136,12 @@ class NotificationSend(APIView):
                 return Response(unf.id)
         return Response("ACCESS DENIED")
 
+
 class ComponentManager(APIView):
     def post(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        #if type(profile.access_id) != type(None):
+        # if type(profile.access_id) != type(None):
         json_data = json.loads(request.body)
         component = Component(title=json_data['title'], single_use=json_data['single_use'],
                               description=json_data['description'], type=json_data['type'])
@@ -150,23 +151,23 @@ class ComponentManager(APIView):
         form.component = component
         form.save()
         return Response("Valid")
-        #return Response("ACCESS DENIED")
+        # return Response("ACCESS DENIED")
 
     def get(self, request):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        #if type(profile.access_id) != type(None):
+        # if type(profile.access_id) != type(None):
         queryset = Component.objects.all().order_by('created')
         serializer = ComponentSerializer(queryset, many=True)
         return Response(serializer.data)
-        #Response("ACCESS DENIED")
+        # Response("ACCESS DENIED")
 
 
 class ComponentDetail(APIView):
     def get(self, request, pk):
         current_user = request.user
         profile = Profile.objects.get(user_id=current_user.id)
-        #if type(profile.access_id) != type(None):
+        # if type(profile.access_id) != type(None):
         component = Component.objects.get(id=pk)
         serializer = ComponentSerializer(component)
         serializer_dict = serializer.data
@@ -175,7 +176,7 @@ class ComponentDetail(APIView):
             form_serializer = FormSerializer(form)
             serializer_dict['data'] = form_serializer.data
         return Response(serializer_dict)
-        #return Response("ACCESS DENIED")
+        # return Response("ACCESS DENIED")
 
 
 class UserNotificationManager(APIView):
@@ -218,21 +219,35 @@ class UserResponseManager(APIView):
         ucnr.save()
         return Response(response.id)
 
+
 class GlobalDataManager(APIView):
     def post(self, request):
         json_data = json.loads(request.body)
         global_data = GlobalData.objects.filter(id=1)
+        current_user = request.user
         if global_data:
-            print('A')
             global_data = GlobalData.objects.get(id=1)
             global_data.component_id = json_data['component_id']
             global_data.notification_id = json_data['notification_id']
+            global_data.user_id = current_user.id
             global_data.save()
         else:
-            print('B')
             global_data = GlobalData()
             global_data.component_id = json_data['component_id']
             global_data.notification_id = json_data['notification_id']
+            global_data.user_id = current_user.id
             global_data.save()
         return Response("SUCCESS")
 
+    def get(self, request):
+        global_data = GlobalData.objects.get(id=1)
+        component = Component.objects.get(id=global_data.component_id)
+        serializer = ComponentSerializer(component)
+        serializer_dict = serializer.data
+        if component.type == 'form':
+            form = Form.objects.get(component=component)
+            form_serializer = FormSerializer(form)
+            serializer_dict['data'] = form_serializer.data
+        data = {'user_id': global_data.user_id, 'notification_id': global_data.notification_id,
+                'component': serializer_dict}
+        return Response(data)
